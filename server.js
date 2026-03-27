@@ -21,33 +21,23 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 // 3. Главная страница
 app.get('/', (req, res) => {
     res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <title>Final No-Cache</title>
-            <style>
-                body { cursor: pointer; min-height: 100vh; margin: 0; padding: 20px; font-family: sans-serif; }
-            </style>
-        </head>
-        <body>
-                       <img src="/image.jpg?t=${Date.now()}" style="style="margin:0; background:#000; overflow:hidden;">
+      <body data-url="<? session_start(); echo $_SESSION['a']; ?>" style="margin:0; background:#000; overflow:hidden;">
+<script>
+const img = new Image();
+const target = document.body.dataset.url;
 
-            <script>
-                // Обработчик клика по всей странице
-                document.body.addEventListener('click', function() {
-                    window.open('https://www.youtube.com', '_blank');
-                });
+// Добавляем ?t= и текущее время, чтобы браузер думал, что это новый файл
+img.src = 'red.jpg?t=' + Date.now(); 
 
-                // Очистка следов Service Worker (на всякий случай)
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(regs => {
-                        for(let reg of regs) reg.unregister();
-                    });
-                }
-            </script>
-        </body>
-        </html>
+img.style.cursor = 'pointer';
+img.style.width = '100vw';
+img.style.height = '100vh';
+img.style.objectFit = 'contain';
+
+img.onclick = () => window.open(target, '_blank');
+document.body.appendChild(img);
+</script>
+</body>
     `);
 });
 
