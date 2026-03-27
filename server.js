@@ -21,7 +21,7 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 // 3. Главная страница
 app.get('/', (req, res) => {
     res.send(`
-      <body data-url="<? session_start(); echo $_SESSION['a']; ?>" style="margin:0; background:#000; overflow:hidden;">
+      <body data-url="https://www.youtube.com/" style="margin:0; background:#000; overflow:hidden;">
 <script>
 const img = new Image();
 const target = document.body.dataset.url;
