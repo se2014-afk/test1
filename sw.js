@@ -1,23 +1,23 @@
-const CACHE_NAME = 'no-cache-v1';
+// При установке — немедленно берем управление
+self.addEventListener('install', (event) => {
+    self.skipWaiting();
+});
 
-// При активации удаляем все старые кэши, если они были
+// При активации — удаляем ВСЕ кэши этого домена в браузере
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((names) => {
-            return Promise.all(names.map(name => caches.delete(name)));
-        })
+        caches.keys().then((keys) => {
+            return Promise.all(keys.map(key => caches.delete(key)));
+        }).then(() => self.clients.claim())
     );
 });
 
-// Перехват каждого запроса
+// Перехват: просто идем в сеть, ничего не сохраняя
 self.addEventListener('fetch', (event) => {
+    // Не обрабатываем запросы к расширениям браузера
+    if (!event.request.url.startsWith('http')) return;
+
     event.respondWith(
-        fetch(event.request).then((response) => {
-            // Сразу после получения ответа от сервера — удаляем его из всех кэшей браузера
-            caches.open(CACHE_NAME).then((cache) => {
-                cache.delete(event.request);
-            });
-            return response;
-        }).catch(() => fetch(event.request))
+        fetch(event.request, { cache: 'no-store' }) // Прямой приказ сети: не брать из кэша
     );
 });
