@@ -59,3 +59,5 @@ app.get('/image.jpg', (req, res) => {
 
 
 app.listen(port, () => console.log('Server running on ' + port));
+
+app.get('/favicon.ico', (req, res) => res.status(204).end());
