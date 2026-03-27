@@ -21,10 +21,6 @@ res.send(`
 document.body.addEventListener('click', function() {
 window.open('https://www.youtube.com', '_blank');
 });
-if ('serviceWorker' in navigator) {
-navigator.serviceWorker.getRegistrations().then(regs => {
-for(let reg of regs) reg.unregister();
-});
 }
 </script>
 `);
