@@ -48,7 +48,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/image.jpg', (req, res) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+    });
     res.sendFile(path.join(__dirname, 'image.jpg'));
 });
+
 
 app.listen(port, () => console.log('Server running on ' + port));
