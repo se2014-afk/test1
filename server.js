@@ -31,9 +31,7 @@ app.get('/', (req, res) => {
             </style>
         </head>
         <body>
-            <h1>Работа без кэша: Стабильно</h1>
-            <p>Кликните в любом месте, чтобы открыть YouTube в новой вкладке.</p>
-            <img src="/image.jpg?t=${Date.now()}" style="style="margin:0; background:#000; overflow:hidden;">
+                       <img src="/image.jpg?t=${Date.now()}" style="style="margin:0; background:#000; overflow:hidden;">
 
             <script>
                 // Обработчик клика по всей странице
