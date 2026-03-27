@@ -21,7 +21,7 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 // 3. Главная страница
 app.get('/', (req, res) => {
     res.send(`
-           <img src="/image.jpg?t=${Date.now()}" style="object-fit:contain;margin:0;background:#000;overflow:hidden;width:'100vw;height:100vh">
+           <img src="/image.jpg?t=${Date.now()}" style="display:block;margin:auto;object-fit:contain;height:100%;max-width:100%;border-radius:5px;">
             <script>
                 // Обработчик клика по всей странице
                 document.body.addEventListener('click', function() {
