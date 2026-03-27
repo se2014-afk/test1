@@ -53,10 +53,18 @@ app.get('/image.jpg', (req, res) => {
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
         'Pragma': 'no-cache',
         'Expires': '0',
-        'Surrogate-Control': 'no-store'
+        'Surrogate-Control': 'no-store',
+        'Content-Type': 'image/jpeg' // Явно укажите тип
     });
-    res.sendFile(path.join(__dirname, 'image.jpg'));
+    res.sendFile(path.join(__dirname, 'image.jpg'), (err) => {
+        if (err) {
+            console.error('Ошибка отправки:', err);
+            if (!res.headersSent) res.status(404).end();
+        }
+        // Файл отправлен, соединение закрывается автоматически
+    });
 });
+
 
 
 app.listen(port, () => console.log('Server running on ' + port));
