@@ -45,10 +45,7 @@ app.get('/', (req, res) => {
 app.get('/image.jpg', (req, res) => {
     const filePath = path.join(__dirname, 'image.jpg');
     
-    // Устанавливаем тип контента вручную для надежности
-    res.type('image/jpeg');
-    
-    res.sendFile(filePath);
+   
+res.sendFile(filePath);
 });
-
 app.listen(port);
