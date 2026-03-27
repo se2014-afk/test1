@@ -48,14 +48,7 @@ app.get('/image.jpg', (req, res) => {
     // Устанавливаем тип контента вручную для надежности
     res.type('image/jpeg');
     
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error("Ошибка при передаче файла:", err);
-            if (!res.headersSent) {
-                res.status(404).send('File not found');
-            }
-        }
-    });
+    res.sendFile(filePath);
 });
 
 app.listen(port);
