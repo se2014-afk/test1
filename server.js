@@ -21,7 +21,6 @@ res.send(`
 document.body.addEventListener('click', function() {
 window.open('https://www.youtube.com', '_blank');
 });
-}
 </script>
 `);
 });
