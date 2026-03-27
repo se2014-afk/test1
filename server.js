@@ -14,7 +14,7 @@ app.use((req, res, next) => {
     });
     next();
 });
-
+ 
 // 2. Заглушка для иконки (чтобы браузер не ждал вечно)
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
