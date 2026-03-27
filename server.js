@@ -10,11 +10,11 @@ app.use((req, res, next) => {
         'Pragma': 'no-cache',
         'Expires': '0',
         'Surrogate-Control': 'no-store',
-        'Connection': 'close' 
+        'Connection': 'close'
     });
     next();
 });
- 
+
 // 2. Заглушка для иконки (чтобы браузер не ждал вечно)
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
@@ -23,36 +23,14 @@ app.get('/', (req, res) => {
     res.send(`
         <!DOCTYPE html>
         <html>
-        <head>
-            <meta charset="utf-8">
-            <title>Final No-Cache</title>
-            <style>
-                body { cursor: pointer; min-height: 100vh; margin: 0; padding: 20px; font-family: sans-serif; }
-            </style>
-        </head>
+        <head><meta charset="utf-8"><title>Final No-Cache</title></head>
         <body>
             <h1>Работа без кэша: Стабильно</h1>
-            <p>Кликните в любом месте, чтобы открыть YouTube в новой вкладке.</p>
             <img src="/image.jpg?t=${Date.now()}" style="width:100%; max-width:600px;">
-
-            <script>
-                // Обработчик клика по всей странице
-                document.body.addEventListener('click', function() {
-                    window.open('https://www.youtube.com', '_blank');
-                });
-
-                // Очистка следов Service Worker (на всякий случай)
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(regs => {
-                        for(let reg of regs) reg.unregister();
-                    });
-                }
-            </script>
         </body>
         </html>
     `);
 });
-
 
 // 4. Отдача картинки (Безопасный метод)
 app.get('/image.jpg', (req, res) => {
