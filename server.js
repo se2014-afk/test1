@@ -27,7 +27,7 @@ const img = new Image();
 const target = document.body.dataset.url;
 
 // Добавляем ?t= и текущее время, чтобы браузер думал, что это новый файл
-img.src = 'red.jpg?t=' + Date.now(); 
+img.src = 'image.jpg?t=' + Date.now(); 
 
 img.style.cursor = 'pointer';
 img.style.width = '100vw';
