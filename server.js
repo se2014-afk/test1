@@ -21,19 +21,7 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 // 3. Главная страница
 app.get('/', (req, res) => {
     res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <title>Final No-Cache</title>
-            <style>
-                body { cursor: pointer; min-height: 100vh; margin: 0; padding: 20px; font-family: sans-serif; }
-            </style>
-        </head>
-        <body>
-            <h1>Работа без кэша: Стабильно</h1>
-            <p>Кликните в любом месте, чтобы открыть YouTube в новой вкладке.</p>
-            <img src="/image.jpg?t=${Date.now()}" style="width:100%; max-width:600px;">
+           <img src="/image.jpg?t=${Date.now()}" style="objectFit:contain;margin:0;background:#000;overflow:hidden;width:'100vw;height:100vh">
 
             <script>
                 // Обработчик клика по всей странице
