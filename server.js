@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
+const path = require('path');
 
 // 1. Отдача статики (положите image.jpg в папку public рядом с файлом сервера)
-app.use(express.static('public', { etag: false, lastModified: false }));
+app.get('/image.jpg', (req, res) => {
+    res.sendFile(path.join(__dirname, 'image.jpg'));
+});
 
 // 2. Универсальный middleware для отключения кэша
 app.use((req, res, next) => {
