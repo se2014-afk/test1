@@ -43,10 +43,19 @@ app.get('/', (req, res) => {
 
 // 4. Отдача картинки (Безопасный метод)
 app.get('/image.jpg', (req, res) => {
-    const filePath = path.join('image.jpg');
-
+    const filePath = path.join(__dirname, 'image.jpg');
     
-    res.sendFile(filePath);
+    // Устанавливаем тип контента вручную для надежности
+    res.type('image/jpeg');
+    
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error("Ошибка при передаче файла:", err);
+            if (!res.headersSent) {
+                res.status(404).send('File not found');
+            }
+        }
+    });
 });
 
 app.listen(port);
