@@ -1,33 +1,32 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
+
+// 1. Отдача статики (положите image.jpg в папку public рядом с файлом сервера)
+app.use(express.static('public', { etag: false, lastModified: false }));
+
+// 2. Универсальный middleware для отключения кэша
 app.use((req, res, next) => {
-res.set({
-'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-'Pragma': 'no-cache',
-'Expires': '0',
-'Surrogate-Control': 'no-store',
-'Connection': 'close'
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Connection': 'close'
+    });
+    next();
 });
-next();
-});
+
 app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.get('/', (req, res) => {
-res.send(`
-<body style="margin:0;overflow:hidden;cursor:pointer;">
-<img src="/image.jpg?t=${Date.now()}" style="object-fit:contain;width:100vw;height:100vh;">
-</body>
-<script>
-document.body.addEventListener('click', function() {
-window.open('https://www.youtube.com', '_blank');
+    res.send(`
+        <!DOCTYPE html>
+        <html style="margin:0; overflow:hidden; background:#000;">
+        <body style="margin:0; cursor:pointer;" onclick="window.open('https://youtube.com', '_blank')">
+            <img src="/image.jpg?${Date.now()}" 
+                 style="display:block; width:100vw; height:100vh; object-fit:contain;">
+        </body>
+        </html>
+    `);
 });
-</script>
-`);
-});
-app.get('/image.jpg', (req, res) => {
-const filePath = path.join(__dirname, 'image.jpg');
-res.type('image/jpeg');
-res.sendFile(filePath);
-});
+
 app.listen(port);
