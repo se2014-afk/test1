@@ -9,6 +9,7 @@ app.use((req, res, next) => {
         'Pragma': 'no-cache',
         'Expires': '0',
         'Surrogate-Control': 'no-store'
+        res.set('Connection', 'close');
     });
     next();
 });
