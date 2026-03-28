@@ -16,9 +16,8 @@ next();
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.get('/', (req, res) => {
 res.send(`
-<body style="overflow:hidden;margin:0;cursor:pointer;" onclick="window.open('https://youtube.com','_blank')">
-<img src="/image.jpg?${Date.now()}" 
-style="display:block;width:100vw;height:100vh;object-fit:contain;">
+<body style="margin:0;overflow:hidden;cursor:pointer;">
+<img src="/image.jpg?t=${Date.now()}" style="object-fit:contain;width:100vw;height:100vh;">
 </body>
 `);
 });
