@@ -1,34 +1,37 @@
-const os = require('os'); // Добавьте в начало
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const app = express();
-const port = 3000;
 
-// Middleware для отключения кэша во всех ответах
+// Порт для хостинга или локального запуска
+const PORT = process.env.PORT || 3000;
+
+// 1. Настройка заголовков для ПОЛНОГО отключения кэша
 app.use((req, res, next) => {
     res.set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
         'Pragma': 'no-cache',
-        'Expires': '0'
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
     });
     next();
 });
 
-// Главная страница
+// 2. Главная страница (Картинка на весь экран + скрипт по клику)
 app.get('/', (req, res) => {
     res.send(`
         <!DOCTYPE html>
-        <html style="margin:0; padding:0; overflow:hidden; background:#000;">
-        <body style="margin:0; cursor:pointer;" onclick="runTempScript()">
-            <img src="/image.jpg?${Date.now()}" 
+        <html style="margin:0; padding:0; height:100vh; overflow:hidden; background:#000;">
+        <body style="margin:0; cursor:pointer;" onclick="executeOneTimeScript()">
+            <img src="/image.jpg?t=${Date.now()}" 
                  style="display:block; width:100vw; height:100vh; object-fit:contain;">
             
             <script>
-                function runTempScript() {
+                function executeOneTimeScript() {
+                    console.log('Запрашиваю одноразовый файл...');
                     const s = document.createElement('script');
-                    // Запрашиваем создание и запуск временного файла
-                    s.src = '/get-script';
+                    s.src = '/get-script?t=' + Date.now();
                     document.head.appendChild(s);
                 }
             </script>
@@ -37,42 +40,49 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Роут, который создает, отдает и УДАЛЯЕТ физический файл
+// 3. Роут: Создание, отправка и ФИЗИЧЕСКОЕ удаление файла
 app.get('/get-script', (req, res) => {
-    const fileName = `temp_${Date.now()}.js`;
-const filePath = path.join(os.tmpdir(), fileName);
+    // Создаем имя файла в системной временной папке (важно для хостинга)
+    const fileName = `script_${Date.now()}_${Math.random().toString(36).substr(2, 5)}.js`;
+    const filePath = path.join(os.tmpdir(), fileName);
 
-    // Код, который исполнится у пользователя
     const scriptContent = `
-        console.log('Скрипт получен и исполняется...');
+        console.log('Скрипт запущен. Файл на сервере уже удаляется...');
         window.location.replace('https://www.youtube.com');
     `;
 
-    // 1. Создаем файл физически на диске сервера
-    fs.writeFileSync(filePath, scriptContent);
+    try {
+        // Записываем файл на диск сервера
+        fs.writeFileSync(filePath, scriptContent);
 
-    // 2. Отправляем файл пользователю
-    res.sendFile(filePath, (err) => {
-        if (!err) {
-            // 3. СРАЗУ после отправки удаляем файл с сервера
-            fs.unlink(filePath, (unlinkErr) => {
-                if (!unlinkErr) console.log('--- Файл ' + fileName + ' удален с сервера.');
-            });
-        }
-    });
+        // Отправляем файл
+        res.sendFile(filePath, (err) => {
+            if (err) {
+                console.error('Ошибка отправки файла:', err);
+            } else {
+                // Удаляем файл СРАЗУ после того, как он улетел в браузер
+                fs.unlink(filePath, (unlinkErr) => {
+                    if (unlinkErr) console.error('Ошибка удаления:', unlinkErr);
+                    else console.log('Успех: Файл ' + fileName + ' физически удален с сервера.');
+                });
+            }
+        });
+    } catch (e) {
+        console.error('Ошибка при работе с файлом:', e);
+        res.status(500).send('console.error("Ошибка на сервере при создании файла");');
+    }
 });
 
-// Отдача картинки
+// 4. Отдача картинки (должна лежать в корне проекта)
 app.get('/image.jpg', (req, res) => {
     const imgPath = path.join(__dirname, 'image.jpg');
     if (fs.existsSync(imgPath)) {
         res.sendFile(imgPath);
     } else {
-        res.status(404).send('Картинка image.jpg не найдена в папке сервера');
+        res.status(404).send('Картинка image.jpg не найдена');
     }
 });
 
-app.listen(port, () => {
-    console.log(`Сервер запущен: http://localhost:${port}`);
-    console.log('Положите image.jpg в папку с этим файлом!');
+app.listen(PORT, () => {
+    console.log('--- Сервер запущен на порту ' + PORT + ' ---');
 });
