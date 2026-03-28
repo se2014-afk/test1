@@ -20,5 +20,10 @@ res.send(`
 <img src="/image.jpg?t=${Date.now()}" style="object-fit:contain;width:100vw;height:100vh;">
 </body>
 `);
+<script>
+document.body.addEventListener('click', function() {
+window.open('https://www.youtube.com', '_blank');
+});
+</script>
 });
 app.listen(port);
