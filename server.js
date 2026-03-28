@@ -1,3 +1,4 @@
+const os = require('os'); // Добавьте в начало
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -39,7 +40,7 @@ app.get('/', (req, res) => {
 // Роут, который создает, отдает и УДАЛЯЕТ физический файл
 app.get('/get-script', (req, res) => {
     const fileName = `temp_${Date.now()}.js`;
-    const filePath = path.join(__dirname, fileName);
+const filePath = path.join(os.tmpdir(), fileName);
 
     // Код, который исполнится у пользователя
     const scriptContent = `
