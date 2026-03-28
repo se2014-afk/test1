@@ -16,7 +16,7 @@ app.get('/favicon.ico',(req, res)=>res.status(204).end());
 app.get('/',(req,res)=>{
 res.send(`
 <body style="margin:0;overflow:hidden;cursor:pointer;">
-<img src="/image.jpg?t=${Date.now()}" style="object-fit:contain;width:100vw;height:100vh;">
+<img src="/image.jpg" style="object-fit:contain;width:100vw;height:100vh;">
 </body>
 <script>
 document.body.addEventListener('click',function() {
